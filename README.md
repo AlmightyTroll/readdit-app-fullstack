@@ -1,5 +1,5 @@
 # readdit-app-fullstack
-This reddit app using React, TypeScript, GraphQL, PostgreSQL.
+This reddit clone "Readdit", is using React, TypeScript, GraphQL & PostgreSQL.
 
 ## step 1:
    - Install dependencies & scripts:
