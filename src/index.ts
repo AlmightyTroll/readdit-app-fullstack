@@ -8,9 +8,10 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { HelloResolver } from './reslovers/hello';
 import { PostResolver } from './reslovers/post';
+import { UserResolver } from "./reslovers/user";
 
 const main = async () => {
-    //console.log("dirname: ", __dirname)
+    console.log("dirname: ", __dirname)
     const orm = await MikroORM.init(mikroConfig)
     await orm.getMigrator().up() // auto run migrations:
 
@@ -21,7 +22,7 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [HelloResolver, PostResolver],
+            resolvers: [HelloResolver, PostResolver, UserResolver],
             validate: false
         }),
         context: () => ({ em: orm.em })
