@@ -29,7 +29,7 @@ const main = async () => {
     app.use(
         session({
             name: 'qid',
-            store: new RedisStore({ client: redisClient, disableTouch: true }),
+            store: new RedisStore({ client: redisClient, disableTouch: true, disableTTL: true }),
             cookie: {
                 maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
                 httpOnly: true,
