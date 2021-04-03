@@ -5,7 +5,7 @@ import { Arg, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 @Resolver()
 export class PostResolver { //1st graphql querry. our schema is a single querry that says hello world.
     @Query(() => [Post]) // [Type]
-    posts(@Ctx() { em }: MyContext
+    async posts(@Ctx() { em }: MyContext
     ): Promise<Post[]> {
         return em.find(Post, {})
     }

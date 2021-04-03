@@ -1,12 +1,15 @@
-mutation Register($username: String!, $password: String!) {
+mutation Register($username: String!, $password: String!) { 
     register(options: { username: $username, password: $password }) {
     errors {
         field
         message
     }
     user {
-        id
-        username
+        ...RegularUser
     }
     }
 }
+
+# can use Register options for username and password as Register($username: String!, $password: String!) 
+# or
+# $options: UsernamePasswordInput! after changing it in the graphql playground as well.
