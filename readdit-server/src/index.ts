@@ -1,8 +1,5 @@
 import "reflect-metadata";
-import { MikroORM } from '@mikro-orm/core';
 import { COOKIE_NAME, __prod__ } from './constants';
-//import { Post } from './entities/Post';
-import mikroConfig from './mikro-orm.config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
@@ -13,11 +10,21 @@ import Redis from 'ioredis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
 import cors from "cors";
+import {createConnection} from 'typeorm';
+import { User } from "./entities/User";
+import { Post } from "./entities/Post";
 
 const main = async () => {
-    const orm = await MikroORM.init(mikroConfig)
-    // await orm.em.nativeDelete(User, {})
-    await orm.getMigrator().up() // auto run migrations:
+    const connection = await createConnection({
+        type: 'postgres',
+        database: 'readit',
+        username: 'postgres',
+        password: 'postgres',
+        logging: true,
+        synchronize: true, // creates tables automattically for you and you don't need to run a migration.
+        entities: [Post, User]
+    })
+    
 
     const app = express()
     app.listen(4000, ()=> {
@@ -53,7 +60,7 @@ const main = async () => {
             resolvers: [HelloResolver, PostResolver, UserResolver],
             validate: false
         }),
-        context: ({ req, res }) => ({ em: orm.em, req, res, redis })
+        context: ({ req, res }) => ({ req, res, redis })
     })
 
     apolloServer.applyMiddleware({ app, cors: false })
@@ -61,17 +68,7 @@ const main = async () => {
     app.get('/', (_, res) => {
         res.send("Hello")
     })
-
-
-    // const post = orm.em.create(Post, {title: "my first post"})
-    // await orm.em.persistAndFlush(post)
-
-    // const posts = await orm.em.find(Post, {})
-    // console.log(posts)
-
-    // console.log("------SQL 2--------")
-    // await orm.em.nativeInsert(Post, {title: "my 2nd post"})
-};
+}
 
 main().catch((err) => {
     console.error(err)
