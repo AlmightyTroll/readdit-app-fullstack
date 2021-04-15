@@ -13,6 +13,7 @@ import cors from 'cors';
 import { createConnection } from 'typeorm';
 import { User } from './entities/User';
 import { Post } from './entities/Post';
+import path from 'path';
 
 const main = async () => {
 	const connection = await createConnection({
@@ -22,8 +23,10 @@ const main = async () => {
 		password: 'postgres',
 		logging: true,
 		synchronize: true, // creates tables automattically for you and you don't need to run a migration.
+		migrations: [path.join(__dirname, './migrations/*')], // need to tell typeorm where the migrations are.  path.join to add to paths together. * to get all the files inside the folder.
 		entities: [Post, User],
 	});
+	await connection.runMigrations(); // will run the migrations that we have that have not already been run.
 
 	// for deleting data in table. Can use if you create new columns and have it set so that it cant be null and you already have data created.
 	// This would cause there to be null data and therefore the app will crash. synchronizing is what crashes, so when you use delete() set synchronize to false, run delete, comment it out and then set synchronize to true again.
